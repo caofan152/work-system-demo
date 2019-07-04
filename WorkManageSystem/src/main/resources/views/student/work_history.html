@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+            <title>
+                Bootstrap 实例 - 如何使用字形图标（Glyphicons）
+            </title>
+            <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+                <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js">
+                </script>
+                <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js">
+                </script>
+                <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js">
+                </script>
+                <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js">
+                </script>
+                <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js">
+                </script>
+            </link>
+        </meta>
+        <style type="text/css">
+            h4{padding-top: 50px }
+        a{margin-top: 100px}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="navbar navbar-fixed-top " height="100px" style="background-color:#337ab7;">
+                <ul class="navbar-nav navbar-right list-unstyled" style="margin-right: 5%">
+                    <li class="nav-item">
+                        <h5>
+                            您好！学生XXX
+                        </h5>
+                    </li>
+                    <li class="nav-item">
+                    <a href="/logout">
+                        <button class="btn btn-default" type="submit">
+                            注销
+                        </button>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-default" type="submit" onclick="changePwd(this)">
+                            修改密码
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <p style="margin-top: 8%"> 目前课程：信息安全</p>
+            <p>任课教师：张老师</p>
+            <table class="table table-hover" >
+
+                <tr>
+                    <th>作业编号</th>
+                    <th>作业名称</th>
+                    <th>发布时间</th>
+                    <th>截止提交时间</th>
+                    <th>操作</th>                    
+                </tr>
+                <tr  th:each="work : ${HISTORY_WORK}">
+		            <td id="id" scope="row" th:text="${work.id}" style="display:none">1</td>
+		            <td id="work_number" th:text="${work.work_number}">neo</td>
+		            <td id="work_title" th:text="${work.work_title}">1</td>
+		            <td id="start_time" th:text="${work.start_time}">Otto</td>
+		            <td id="end_time" th:text="${work.end_time}">Otto</td>
+		            <td id="work_course_number" th:text="${work.work_course_number}" style="display:none">neo</td>
+		            <td id="current_student" th:text="${session.USER_MESSAGE.account}" style="display:none"></td>
+		            <td><button id="edit_class" type="button" class="btn btn-warning" >查看详情</button></td>
+		        </tr>
+                
+            </table>
+        </div>
+    </body>
+        <script type="text/javascript">
+    
+    $(function(){    //导航栏跳转
+    
+    	$("tr #edit_class").click(function(){
+    		var _work_course_number = $(this).parents("tr").find("#work_course_number").text();
+            var _current_student = $(this).parents("tr").find("#current_student").text();
+            var _work_number = $(this).parents("tr").find("#work_number").text();
+            
+            $.post("/student_work_detail" , {
+            	work_course_number:_work_course_number,
+            	finish_student_number: _current_student,
+            	work_number:_work_number},function(response){
+				console.log(response);
+				self.location = "student_work_detail?work_course_number="+_work_course_number
+						+"&finish_student_number="+_current_student
+						+"&work_number="+_work_number;
+			}); 
+    	});
+        
+    });
+    
+    function changePwd(btn){
+    	layer.open({
+			  type: 2,
+			  title: false,
+			  shade: 0.8, 
+			  title: '修改当前用户密码',
+			  area: ['50%', '80%'],
+			  content: ['/changePassword', 'yes'], //iframe的url，no代表不显示滚动条
+			});
+    }
+    </script>
+</html>

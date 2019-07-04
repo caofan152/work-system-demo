@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+<meta http-equiv="Pragma" content="no-cache"> 
+<meta http-equiv="Cache-Control" content="no-cache"> 
+<meta http-equiv="Expires" content="0"> 
+<title>登陆</title>
+<link href="login.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div class="login_box">
+      <div class="login_l_img"><img src="images/login-img.png" /></div>
+      <div class="login">
+          <div class="login_logo"><a href="#"><img src="images/login_logo.png" /></a></div>
+          <div class="login_name">
+               <p>作业管理系统</p>
+          </div>
+          <form method="post">
+              <input name="account" id="account" type="text" placeholder="账户名">
+              <span id="password_text" onclick="this.style.display='none';document.getElementById('password').style.display='block'" >密码</span>
+              <input name="password" type="password" id="password" style="display:none;" onblur="if(this.value==''){document.getElementById('password_text').style.display='block';this.style.display='none'};"/>
+              <!-- <input id="login" value="登录" style="width:100%;" type="submit"> -->
+              <button id="login" class="btn btn-lg btn-primary btn-block" onclick="doValidate(this)" type="button">登陆</button>
+              
+          </form>
+      </div>
+</div>
+</body>
+<!-- <script src="http://training-static.linesno.com/vendor/jquery/jquery.min.js"></script> -->
+<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js">
+<script type="text/javascript">
+  /* window.onload=function(){ */
+    var account = document.getElementById('account');
+    var password =document.getElementById('password');
+    var login = document.getElementById('login');
+    var init = true;
+
+    <!-- 思路: 前端校验通过后进行表单提交，表单提交到controller验证，验证成功后实例化session中的用户信息，返回用户类型，根据用户类型进行界面跳转 -->
+    
+    login.onclick = function(){
+    	var account_ = $("input[name=account]").val;
+    	var password_ =$("input[password=password]").val;
+    	
+      if(account.value==' '){
+        alert("用户名不能为空");
+        init = false;
+        return;
+      }
+      if (!/^\d{10}$/.test(account.value)) { //正则判断账户名为10位纯数字
+        alert("账户名格式错误"+account_);
+        init = false;
+        return;
+      }
+      if (password.value==' ') {
+        alert("密码不能为空");
+        init = false;
+        return;
+      }
+      alert("post 请求");
+      if (init) {
+    	  alert("post 请求");
+    	  $.post("/validate" , {account:account_ , password:password_},function(response){
+    		  console.log("response = " + response);
+    	  	  if(response.code == 400){
+    	  		  alert(response.message);
+    	  	  }else if(response.code == 200){
+    	    	  alert("身份认证成功" + account_ + password_);
+    	  		  //self.location = "" ;
+    	  	  }
+    	  });    	  
+      }
+    }
+
+  //}
+</script>
+</html>

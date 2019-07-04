@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<meta name="author" content="">
+<title>高校作业管理系统用户登录</title>
+<link rel="shortcut icon" href="http://training-static.linesno.com/switch_run/favicon.ico" />
+
+<link
+	href="http://training-static.linesno.com/vendor/bootstrap/css/bootstrap.min.css"
+	rel="stylesheet">
+<link
+	href="https://v4.bootcss.com/docs/4.0/examples/floating-labels/floating-labels.css"
+	rel="stylesheet">
+
+<style type="text/css">
+.form-control {
+	height: auto !important;
+}
+</style>
+
+</head>
+
+<body>
+	<form class="form-signin">
+		<div class="text-center mb-4">
+			<h1 class="h3 mb-3 font-weight-normal">高校作业管理系统</h1>
+			<p>WELCOME</p>
+		</div>
+
+		<div class="form-label-group">
+			<input type="text" name="account" id="account" class="form-control"
+				placeholder="账号" required autofocus> <label for="account">账户</label>
+		</div>
+
+		<div class="form-label-group">
+			<input type="password" name="password" id="inputPassword" class="form-control"
+				placeholder="密码" required> <label for="inputPassword">密码</label>
+		</div>
+
+		<div class="checkbox mb-3">
+			<label> <input type="checkbox" value="remember-me">
+				记住我
+			</label>
+		</div>
+
+		<button class="btn btn-lg btn-primary btn-block" onclick="doValidate(this)" type="button">登陆</button>
+		<p class="mt-5 mb-3 text-muted text-center">&copy; 2017-2018</p>
+	</form>
+	
+	  <script src="http://training-static.linesno.com/vendor/jquery/jquery.min.js"></script>
+	  <script type="text/javascript">
+		    var init = true;
+		    var account = document.getElementById('account');
+		    var password =document.getElementById('inputPassword'); 
+		    <!-- 思路: 前端校验通过后进行表单提交，表单提交到controller验证，验证成功后实例化session中的用户信息，返回用户类型，根据用户类型进行界面跳转 -->
+		    
+		    function doValidate(btn){
+		    	var account_ = $("input[name=account]").val;
+		    	var password_ =$("input[name=password]").val;
+		    	
+		    	console.log(account_,password_);
+		    	console.log(account.value,password.value);
+		    	
+		      if(account.value==' '){
+		        alert("用户名不能为空");
+		        init = false;
+		        return;
+		      }
+		      if (!/^\d{10}$/.test(account.value)) { //正则判断账户名为10位纯数字
+		        alert("账户名格式错误"+account_);
+		        init = false;
+		        return;
+		      }
+		      if (password_==' ') {
+		        alert("密码不能为空");
+		        init = false;
+		        return;
+		      }
+
+		      if (init) {
+		    	  alert("post 请求");
+		    	  $.post("/validate" , {account:account.value , password:password.value},function(response){
+		    		  console.log("response = " + response);
+		    	  	  if(response.code == 400){
+		    	  		  alert(response.message);
+		    	  	  }else if(response.code == 200){
+						  var user_type = response.message;
+						  var date = response.date;
+		    	  		  console.log("get user_type"+user_type+"  date " +date);
+						  if(user_type == "admin"){
+			    	  		  self.location = "/adminIndex" ;
+							}else if(user_type == "teacher"){
+				    	  	  self.location = "/teacherIndex" ;
+							}else if(user_type == "student"){
+				    	  	  self.location = "/student_index" ;
+							}
+		    	  		  
+		    	  	  }
+		    	  });    	  
+		      }
+		    }
+
+	  </script>
+</body>
+</html>
+

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+            <title>
+                Bootstrap 实例 - 如何使用字形图标（Glyphicons）
+            </title>
+            <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+                <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js">
+                </script>
+                <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js">
+                </script>
+                <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js">
+                </script>
+                <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js">
+                </script>
+                <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js">
+                </script>
+                <script src="http://training-static.linesno.com/js/jquery.form/jquery.form.js"></script>
+            </link>
+        </meta>
+        <style type="text/css">
+            h4{padding-top: 50px }
+        a{margin-top: 100px}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="navbar navbar-fixed-top " height="100px" style="background-color:#337ab7;">
+                <ul class="navbar-nav navbar-right list-unstyled" style="margin-right: 5%">
+                    <li class="nav-item">
+                        <h5>
+   					您好！学生<span th:text="${session.USER_MESSAGE.account}"></span> 
+                        </h5>
+                    </li>
+                    <li class="nav-item">
+                    <a href="/logout">
+                        <button class="btn btn-default" type="submit">
+                                    注销
+                        </button>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-default" type="submit" onclick="changePwd(this)">
+                            修改密码
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <p style="margin-top: 8%"> 
+            <button class="btn btn-danger" onclick="back()">返回</button>	
+                     目前课程：<span id="course_name" th:text="${WORKDETAIL.course_name}"></span></p>
+            <p>作业序号:<input id="work_number" th:value="${WORKDETAIL.work_number}" readonly></span></p>
+            <p>目前学生:<span id="finish_student" th:text="${WORKDETAIL.finish_student}"/> </p> 
+            <p>学生学号：<input id="finish_student_number" th:value="${WORKDETAIL.finish_student_number}" readonly></p>
+            <div>
+                <p class="lead">
+                作业标题：<span id="work_title" th:text="${WORK.work_title}"></span>
+                </p>
+                <p class="lead">	
+                作业详情：<span id="work_details" th:text="${WORK.work_details}"></span>
+            </p>
+               作答详情<textarea cols="150" rows="20" readonly th:text="${WORKDETAIL.work_submition}">
+            </textarea>          
+              <button type="button" class="btn btn-danger" onclick="addChange()">提交批改</button>
+            </div>
+        </div>
+    </body>
+    <script type="text/javascript">
+   		var work_number = document.getElementById("work_number");
+   		var finish_student_number = document.getElementById("finish_student_number");
+   		var grades = document.getElementById("grades");
+   		var work_comment = document.getElementById("work_comment");
+   		var checkbox = document.getElementById("checkbox");
+  		
+    	function addChange(){
+    		var _work_number = work_number.value;
+    		var _finish_student_number = finish_student_number.value;
+    		var _grades = grades.value;
+    		var _work_comment = work_comment.value;
+			var _checkbox = false;
+    		
+			
+    		if(_checkbox.checked){
+    			_checkbox=true;
+    		}
+			alert(_work_number+" : "+_finish_student_number+" : "+_grades+_work_comment+" : "+_checkbox);
+    		
+    		$.post("/confirm_work" , {
+    			work_number:_work_number,
+    			finish_student_number:_finish_student_number,
+    			grades:_grades,
+    			work_comment:_work_comment,
+    			work_model:_checkbox},function(response){
+	     		  console.log("response = " + response);
+	     		 self.location = "/work_detail";
+	     	  }); 
+    	}
+    	
+    	function back(){
+    		var _work_number = work_number.value;
+			$.post("",{},function(response){
+				self.location="work_student_detail?work_number="+_work_number;
+			});
+    	}
+    	
+    	function changePwd(btn){
+        	layer.open({
+    			  type: 2,
+    			  title: false,
+    			  shade: 0.8, 
+    			  title: '修改当前用户密码',
+    			  area: ['50%', '80%'],
+    			  content: ['/changePassword', 'yes'], //iframe的url，no代表不显示滚动条
+    			});
+        }
+    </script>
+</html>

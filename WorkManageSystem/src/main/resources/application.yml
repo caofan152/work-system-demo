@@ -1,0 +1,13 @@
+spring: 
+ thymeleaf:
+    cache: false 
+    prefix: classpath:/views/
+ datasource: 
+  url: jdbc:mysql://127.0.0.1:3306/area?characterEncoding=UTF-8?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&userSSL=false&serverTimezone=GMT%2B8
+  username: root
+  password: admin
+  driver-class-name: com.mysql.cj.jdbc.Driver
+ jpa: 
+  show-sql: true
+  hibernate: 
+   ddl-auto: update
